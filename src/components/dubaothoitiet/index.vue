@@ -1,44 +1,121 @@
-<template >
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card border-0 border-3 border-top border-primary">
-                <div class="card-header text-center">
-                    <h4 class="text-primary">Dự Báo Thời Tiết</h4>
-                </div>
-                <div class="card-body">
-                    <i class="fa-solid fa-cloud-rain"></i>
-                    <label class="mt-2" for=""><h5>Lượng Mưa</h5></label>
-                    <input type="text" class="form-control mb-2" placeholder="Nhập lượng mưa (mm)">
-                    <i class="fa-solid fa-temperature-three-quarters"></i>
-                    <label class="mt-2" for=""><h5>Nhiệt Độ Cao Nhất</h5></label>
-                    <input type="text" class="form-control mb-2 " placeholder="Nhập nhiêt độ cao nhất (°C)">
-                    <i class="fa-solid fa-temperature-quarter"></i>
-                    <label class="mt-2" for=""><h5>Nhiệt Độ Thấp Nhất</h5></label>
-                    <input type="text" class="form-control mb-2 " placeholder="Nhập nhiệt độ thấp nhất (°C)">
-                    <label class="mt-2" for=""><h5>Gió</h5></label>
-                    <input type="text" class="form-control mb-2" placeholder="Nhập chỉ số gió (km/h)">
-                </div>
-                <div class="card-footer text-center">
-                    <button class="btn btn-primary ">Kết Quả</button>
-                </div>
-            </div>
-        </div>
+<!-- src/components/WeatherPredict.vue -->
+<template>
+  <div class="weather-predict">
+    <h2>Dự Báo Thời Tiết</h2>
+    <form @submit.prevent="predictWeather">
+      <div class="form-group">
+        <label>Lượng mưa (mm)</label>
+        <input
+          v-model="weatherData.precipitation"
+          type="number"
+          step="0.1"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Nhiệt độ cao nhất (°C)</label>
+        <input
+          v-model="weatherData.temp_max"
+          type="number"
+          step="0.1"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Nhiệt độ thấp nhất (°C)</label>
+        <input
+          v-model="weatherData.temp_min"
+          type="number"
+          step="0.1"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Tốc độ gió (km/h)</label>
+        <input v-model="weatherData.wind" type="number" step="0.1" required />
+      </div>
+
+      <button type="submit">Dự đoán</button>
+    </form>
+
+    <div v-if="prediction" class="prediction-result">
+      <h3>Kết quả dự đoán:</h3>
+      <p>{{ prediction }}</p>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-            <div class="card-body">
-                
-            </div>
-        </div>
-        </div>
+
+    <!-- Thêm phần hiển thị lỗi -->
+    <div v-if="error" class="error-message">
+      <p>{{ error }}</p>
     </div>
+  </div>
 </template>
+  
 <script>
+import axios from 'axios';
+
 export default {
-    
+  data() {
+    return {
+      weatherData: {
+        precipitation: 0,
+        temp_max: 0,
+        temp_min: 0,
+        wind: 0
+      },
+      prediction: null,
+      error: null
+    }
+  },
+  methods: {
+    async predictWeather() {
+      try {
+        this.error = null;
+        const response = await axios.post('http://127.0.0.1:8000/api/predict', {
+          precipitation: parseFloat(this.weatherData.precipitation),
+          temp_max: parseFloat(this.weatherData.temp_max), 
+          temp_min: parseFloat(this.weatherData.temp_min),
+          wind: parseFloat(this.weatherData.wind)
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept'
+          }
+        });
+        
+        if (response.data) {
+          this.prediction = response.data.prediction;
+          this.error = null;
+        } else {
+          this.error = 'Không nhận được kết quả dự đoán từ máy chủ';
+        }
+      } catch (error) {
+        console.error('Lỗi khi dự đoán:', error);
+        if (error.code === 'ECONNREFUSED') {
+          this.error = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra xem máy chủ đã được khởi động chưa.';
+        } else if (error.response && error.response.data) {
+          this.error = error.response.data.message;
+        } else {
+          this.error = 'Có lỗi xảy ra khi thực hiện dự đoán. Vui lòng thử lại sau.';
+        }
+      }
+    }
+  }
 }
 </script>
-<style >
-    
+
+<style scoped>
+.error-message {
+  color: red;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid red;
+  border-radius: 4px;
+  background-color: #fff3f3;
+}
 </style>
