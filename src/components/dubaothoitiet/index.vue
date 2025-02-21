@@ -78,14 +78,6 @@ export default {
           temp_max: parseFloat(this.weatherData.temp_max), 
           temp_min: parseFloat(this.weatherData.temp_min),
           wind: parseFloat(this.weatherData.wind)
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept'
-          }
         });
         
         if (response.data) {
