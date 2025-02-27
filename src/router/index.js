@@ -9,6 +9,10 @@ const routes = [
         path : '/du-bao-thoi-tiet',
         component: ()=>import('../components/dubaothoitiet/index.vue')
     },
+    {
+        path : '/trang-chu',
+        component: ()=>import('../components/TrangChu/index.vue')
+    },
 ]
 
 const router = createRouter({
