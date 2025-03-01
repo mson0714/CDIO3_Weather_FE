@@ -13,6 +13,22 @@ const routes = [
         path : '/ban-do',
         component: ()=>import('../components/BanDo/index.vue')
     },
+    {
+        path : '/dang-ky',
+        component: ()=>import('../components/NguoiDung/DangKy/index.vue'),
+        meta: {
+            layout: 'blank'
+        }
+    },
+    {
+        path : '/dang-nhap',
+        component: ()=>import('../components/NguoiDung/DangNhap/index.vue'),
+        meta: {
+            layout: 'blank'
+        }
+    },
+   
+        
    
 ]
 

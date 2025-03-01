@@ -4,17 +4,29 @@
     <header class="header">
       <div class="header-top">
         <div class="container">
-          <div class="logo">
-            <router-link to="/">
-              <div class="logo-container">
-                <img src="https://files02.duytan.edu.vn/svruploads/dtu-duytan/upload/images/logoDT-70.png" alt="Logo" />
-                <span>DỰ BÁO THỜI TIẾT</span>
-              </div>
-            </router-link>
-          </div>
-          <div class="search">
-            <input type="text" placeholder="Tìm kiếm..." />
-            <button><i class="fas fa-search"></i></button>
+          <div class="header-content">
+            <div class="logo">
+              <router-link to="/">
+                <div class="logo-container">
+                  <img src="https://files02.duytan.edu.vn/svruploads/dtu-duytan/upload/images/logoDT-70.png" alt="Logo" />
+                  <span>DỰ BÁO THỜI TIẾT</span>
+                </div>
+              </router-link>
+            </div>
+            
+            <div class="search">
+              <input type="text" placeholder="Tìm kiếm thông tin thời tiết..." />
+              <button><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="auth-buttons">
+              <router-link to="/dang-nhap" class="btn-auth btn-login">
+                <i class="fas fa-sign-in-alt"></i> Đăng nhập
+              </router-link>
+              <router-link to="/dang-ky" class="btn-auth btn-register">
+                <i class="fas fa-user-plus"></i> Đăng ký
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -27,7 +39,6 @@
             </li>
             <li class="nav-item ">
               <a href="/du-bao-thoi-tiet" class="nav-link"> <i class="fa-solid fa-cloud-sun-rain"></i> DỰ ĐOÁN THỜI TIẾT </a>
-              
             </li>
             <li class="nav-item dropdown">
               <a href="#" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> THỜI TIẾT <i class="fas fa-angle-down"></i></a>
@@ -162,15 +173,15 @@ ul {
   padding: 15px 0;
 }
 
-.header-top .container {
+.header-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
+  flex: 0 0 auto;
 }
 
 .logo-container {
@@ -193,26 +204,75 @@ ul {
 }
 
 .search {
-  display: flex;
-  max-width: 300px;
+  flex: 1;
+  max-width: 500px;
+  margin: 0 20px;
+  position: relative;
 }
 
 .search input {
-  flex: 1;
-  padding: 8px 12px;
+  width: 100%;
+  padding: 10px 40px 10px 15px;
   border: 1px solid #ddd;
-  border-right: none;
-  border-radius: 4px 0 0 4px;
+  border-radius: 30px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.search input:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
   outline: none;
 }
 
 .search button {
-  padding: 8px 12px;
-  background: #0056b3;
-  color: white;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
   border: none;
-  border-radius: 0 4px 4px 0;
+  color: #0056b3;
+  font-size: 16px;
   cursor: pointer;
+  padding: 8px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.btn-auth {
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s;
+}
+
+.btn-login {
+  background-color: transparent;
+  color: #0056b3;
+  border: 1px solid #0056b3;
+}
+
+.btn-register {
+  background-color: #0056b3;
+  color: white;
+  border: 1px solid #0056b3;
+}
+
+.btn-login:hover {
+  background-color: rgba(0, 86, 179, 0.1);
+}
+
+.btn-register:hover {
+  background-color: #003d7a;
 }
 
 /* Navigation Styles */
@@ -403,10 +463,32 @@ ul {
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
-  .header-top .container {
-    flex-direction: column;
+@media (max-width: 992px) {
+  .header-content {
+    flex-wrap: wrap;
     gap: 15px;
+  }
+  
+  .search {
+    order: 3;
+    max-width: 100%;
+    margin: 10px 0 0;
+    flex: 0 0 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo {
+    margin-bottom: 15px;
+  }
+  
+  .auth-buttons {
+    margin-top: 15px;
   }
   
   .nav-list {
