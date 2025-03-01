@@ -2,12 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://dzfullstack.com/assets/images/logo-1.png"/>
+    <link rel="icon" type="image/svg+xml" href="https://files02.duytan.edu.vn/svruploads/dtu-duytan/upload/images/logoDT-70.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dz FullStack</title>
+    <title>CDIO 3 - Dự Báo Thời Tiết</title>
+    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.3/libs/oversea/index.js"></script>
+
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+
+    <script>
+      new CozeWebSDK.WebChatClient({
+        config: {
+          bot_id: '7475987727956312080',
+        },
+        componentProps: {
+          title: 'Coze',
+        },
+        auth: {
+          type: 'token',
+          token: 'pat_x7yslF2pec0VbMxExPLbGFlaUHtlP06Twpwq6i3SWdYUcGb3uwTjVjD4gGZExGaJ',
+          onRefreshToken: function () {
+            return 'pat_x7yslF2pec0VbMxExPLbGFlaUHtlP06Twpwq6i3SWdYUcGb3uwTjVjD4gGZExGaJ'
+          }
+        }
+      });
+    </script>
   </body>
 </html>

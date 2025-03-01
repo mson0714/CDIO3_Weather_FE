@@ -1,120 +1,434 @@
 <template>
-  <div class="header-wrapper">
-    <!--start header -->
-    <header>
-      <div class="row">
-        <div class="col-lg-12">
-          <img class="img-fluid w-100" src="../../assets/images/products/MENU.png" />
+  <div class="weather-app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <div class="container">
+          <div class="logo">
+            <router-link to="/">
+              <div class="logo-container">
+                <img src="https://files02.duytan.edu.vn/svruploads/dtu-duytan/upload/images/logoDT-70.png" alt="Logo" />
+                <span>DỰ BÁO THỜI TIẾT</span>
+              </div>
+            </router-link>
+          </div>
+          <div class="search">
+            <input type="text" placeholder="Tìm kiếm..." />
+            <button><i class="fas fa-search"></i></button>
+          </div>
         </div>
       </div>
-      <nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary">
-        <div class="container-fluid">
-          
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item dropdown me-5">
-                <a class="nav-link dropdown-toggle text-white "
-                  style="font-size: 25px; font-family: 'Arial'; font-weight: bold;" href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  GIỚI THIỆU
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-              <li class="nav-item dropdown ms-5 me-5">
-                <a class="nav-link dropdown-toggle text-white"
-                  style="font-size: 25px; font-family: 'Arial'; font-weight: bold;" href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  THỜI TIẾT
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-              <li class="nav-item dropdown ms-5 me-5">
-                <a class="nav-link dropdown-toggle text-white"
-                  style="font-size: 25px; font-family: 'Arial'; font-weight: bold;" href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  LIÊN HỆ
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-
-              <li class="nav-item dropdown ms-5 me-5">
-                <a class="nav-link dropdown-toggle text-white"
-                  style="font-size: 25px; font-family: 'Arial'; font-weight: bold;" href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  DỊCH VỤ TƯ VẤN
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-              <div class="d-flex" role="search" style="margin-left: 150px;">
-                <input class="form-control me-2 w-100"  type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-success " type="submit">Search</button>
-              </div>
-            </ul>
-          </div>
+      
+      <nav class="main-nav">
+        <div class="container">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <router-link to="/" class="nav-link"><i class="fa-solid fa-house text-white"></i> TRANG CHỦ</router-link>
+            </li>
+            <li class="nav-item ">
+              <a href="/du-bao-thoi-tiet" class="nav-link"> <i class="fa-solid fa-cloud-sun-rain"></i> DỰ ĐOÁN THỜI TIẾT </a>
+              
+            </li>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> THỜI TIẾT <i class="fas fa-angle-down"></i></a>
+              <ul class="dropdown-menu">
+                <li><router-link to="/thoi-tiet/mien-bac">Miền Bắc</router-link></li>
+                <li><router-link to="/thoi-tiet/mien-trung">Miền Trung</router-link></li>
+                <li><router-link to="/thoi-tiet/mien-nam">Miền Nam</router-link></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <router-link to="/ban-do" class="nav-link"> <i class="fa-solid fa-map-location-dot"></i> BẢN ĐỒ</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/tin-tuc" class="nav-link"> <i class="fa-solid fa-newspaper"></i> TIN TỨC</router-link>
+            </li> 
+            <li class="nav-item">
+              <router-link to="/lien-he" class="nav-link"> <i class="fa-solid fa-phone"></i> LIÊN HỆ</router-link>
+            </li>
+          </ul>
         </div>
       </nav>
     </header>
-    <!--end header -->
-    <!--navigation-->
 
-    <!--end navigation-->
-  </div>
-  <!--end header wrapper-->
-  <!--start page wrapper -->
-  <div class="page-wrapper">
-    <router-view></router-view>
-  </div>
-  <div class="overlay toggle-icon">
-    <!--end overlay-->
-    <!--Start Back To Top Button-->
-    <a href="javaScript:;" class="back-to-top"><i class="bx bxs-up-arrow-alt"></i></a>
-    <!--End Back To Top Button-->
-    <footer class="page-footer">
-      <p class="mb-0">Copyright © 2021. All right reserved.</p>
+    <!-- Main Content -->
+    <main class="main">
+      <div class="container">
+        <slot></slot>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-about">
+            <h3>TRUNG TÂM DỰ BÁO THỜI TIẾT</h3>
+            <p>Cung cấp thông tin dự báo thời tiết chính xác, kịp thời và đáng tin cậy.</p>
+            <div class="contact-info">
+              <p><i class="fas fa-map-marker-alt"></i> 123 Đường Thời Tiết, Quận Dự Báo, TP. Hà Nội</p>
+              <p><i class="fas fa-phone"></i> (024) 1234 5678</p>
+              <p><i class="fas fa-envelope"></i> info@dubaothoitiet.vn</p>
+            </div>
+          </div>
+          
+          <div class="footer-links">
+            <h4>LIÊN KẾT NHANH</h4>
+            <ul>
+              <li><router-link to="/">Trang chủ</router-link></li>
+              <li><router-link to="/du-bao">Dự báo</router-link></li>
+              <li><router-link to="/thoi-tiet">Thời tiết</router-link></li>
+              <li><router-link to="/ban-do">Bản đồ</router-link></li>
+              <li><router-link to="/tin-tuc">Tin tức</router-link></li>
+            </ul>
+          </div>
+          
+          <div class="footer-subscribe">
+            <h4>ĐĂNG KÝ NHẬN TIN</h4>
+            <p>Nhận thông tin dự báo thời tiết hàng ngày qua email</p>
+            <div class="subscribe-form">
+              <input type="email" placeholder="Email của bạn" />
+              <button>Đăng ký</button>
+            </div>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="footer-bottom">
+          <p>&copy; 2024 Trung tâm Dự báo Thời tiết. Tất cả quyền được bảo lưu.</p>
+        </div>
+      </div>
     </footer>
+    
+    <!-- Back to top button -->
+    <div class="back-to-top">
+      <a href="#"><i class="fas fa-arrow-up"></i></a>
+    </div>
+    
+    <!-- Chat Bot Container -->
+    <div id="coze-chat-container"></div>
   </div>
 </template>
+
 <script>
-import "../../assets/js/bootstrap.bundle.min.js";
-import "../../assets/js/jquery.min.js";
-import "../../assets/plugins/simplebar/js/simplebar.min.js";
-import "../../assets/plugins/metismenu/js/metisMenu.min.js";
-import "../../assets/js/index.js";
-import "../../assets/js/app.js";
 export default {};
 </script>
+
 <style>
-@import "../../assets/plugins/vectormap/jquery-jvectormap-2.0.2.css";
-@import "../../assets/plugins/simplebar/css/simplebar.css";
-@import "../../assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css";
-@import "../../assets/plugins/metismenu/css/metisMenu.min.css";
-@import "../../assets/css/bootstrap.min.css";
-@import "../../assets/css/bootstrap-extended.css";
-@import "../../assets/css/app.css";
-@import "../../assets/css/icons.css";
-@import "../../assets/css/dark-theme.css";
-@import "../../assets/css/semi-dark.css";
-@import "../../assets/css/header-colors.css";
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Header Styles */
+.header {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-top {
+  padding: 15px 0;
+}
+
+.header-top .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+  width: 40px;
+  margin-right: 12px;
+}
+
+.logo span {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0056b3;
+  letter-spacing: 1px;
+}
+
+.search {
+  display: flex;
+  max-width: 300px;
+}
+
+.search input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+.search button {
+  padding: 8px 12px;
+  background: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+/* Navigation Styles */
+.main-nav {
+  background-color: #0056b3;
+  color: white;
+}
+
+.nav-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: block;
+  padding: 15px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #003d7a;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 200px;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  z-index: 100;
+}
+
+.nav-item:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #f5f5f5;
+}
+
+/* Main Content Styles */
+.main {
+  padding: 30px 0;
+  min-height: 500px;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #222;
+  color: #fff;
+  padding: 50px 0 20px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.footer h3, .footer h4 {
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.contact-info p {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.contact-info i {
+  margin-right: 10px;
+  color: #0056b3;
+}
+
+.footer-links ul li {
+  margin-bottom: 10px;
+}
+
+.footer-links ul li a {
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #0056b3;
+}
+
+.subscribe-form {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.subscribe-form input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+}
+
+.subscribe-form button {
+  padding: 10px 15px;
+  background: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.social-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #333;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.social-links a:hover {
+  background-color: #0056b3;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+}
+
+/* Back to top button */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+}
+
+.back-to-top a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #0056b3;
+  color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+.back-to-top a:hover {
+  background-color: #003d7a;
+}
+
+/* Chat container */
+#coze-chat-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 98;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header-top .container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .nav-list {
+    flex-direction: column;
+  }
+  
+  .dropdown-menu {
+    position: static;
+    width: 100%;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    display: none;
+  }
+  
+  .nav-item:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
