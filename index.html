@@ -6,19 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CDIO 3 - Dự Báo Thời Tiết </title>
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.3/libs/oversea/index.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
 
     <script>
-      new CozeWebSDK.WebChatClient({
+      // Lưu trữ tham chiếu đến chatbot để có thể truy cập từ bên ngoài
+      window.cozeChat = new CozeWebSDK.WebChatClient({
         config: {
           bot_id: '7475987727956312080',
         },
         componentProps: {
-          title: 'Coze',
+          title: 'Trợ lý thời tiết',
         },
         auth: {
           type: 'token',
@@ -26,8 +27,25 @@
           onRefreshToken: function () {
             return 'pat_x7yslF2pec0VbMxExPLbGFlaUHtlP06Twpwq6i3SWdYUcGb3uwTjVjD4gGZExGaJ'
           }
+        },
+        ui: {
+          chatBot: {
+            position: 'bottom-right',
+            height: '600px',
+            width: '400px'
+          }
         }
       });
+      
+      // Thêm phương thức để mở chatbot từ bên ngoài
+      window.openChatbot = function() {
+        if (window.cozeChat && window.cozeChat.open) {
+          window.cozeChat.open();
+        } else {
+          console.error("Không thể mở chatbot. Coze chưa được khởi tạo đúng cách.");
+        }
+      };
     </script>
+    <!-- XÓA đoạn script trùng lặp window.cozeSettings -->
   </body>
 </html>

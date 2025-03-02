@@ -1,10 +1,20 @@
 <template>
   <div class="trang-chu">
     <!-- Banner chính -->
+    <!-- Thay đổi hero-section HTML để thêm video -->
     <section class="hero-section">
+      <video class="hero-video" autoplay muted loop>
+        <source
+          src="/public/videos/home/istockphoto-1667456740-640_adpp_is.mp4"
+          type="video/mp4"
+        />
+      </video>
       <div class="hero-content">
         <h1>Dự Báo Thời Tiết Chính Xác</h1>
-        <p>Cung cấp thông tin thời tiết tin cậy, kịp thời cho mọi vùng miền Việt Nam</p>
+        <p>
+          Cung cấp thông tin thời tiết tin cậy, kịp thời cho mọi vùng miền Việt
+          Nam
+        </p>
         <router-link to="/du-bao-thoi-tiet" class="btn-primary">
           <i class="fas fa-cloud-sun-rain"></i> Dự Đoán Ngay
         </router-link>
@@ -14,13 +24,19 @@
     <!-- Thời tiết các thành phố lớn -->
     <section class="city-weather">
       <div class="section-header">
-        <h2><i class="fas fa-map-marker-alt"></i> Thời Tiết Các Thành Phố Lớn</h2>
+        <h2>
+          <i class="fas fa-map-marker-alt"></i> Thời Tiết Các Thành Phố Lớn
+        </h2>
       </div>
       <div class="city-grid">
         <div class="city-card" v-for="(city, index) in cities" :key="index">
           <div class="city-name">{{ city.name }}</div>
           <div class="city-weather-icon">
-            <img :src="city.icon" :alt="city.weather" />
+            <img
+              :src="city.icon"
+              :alt="city.weather"
+              @error="handleIconError(index)"
+            />
           </div>
           <div class="city-temp">{{ city.temp }}°C</div>
           <div class="city-weather-desc">{{ city.weather }}</div>
@@ -42,9 +58,16 @@
         <h2><i class="fas fa-map"></i> Bản Đồ Thời Tiết</h2>
       </div>
       <div class="map-container">
-        <iframe width="1250" height="650" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=km/h&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=15.756&lon=106.902&message=true" frameborder="0"></iframe>
+        <iframe
+          width="1250"
+          height="650"
+          src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=km/h&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=15.756&lon=106.902&message=true"
+          frameborder="0"
+        ></iframe>
         <div class="map-overlay">
-          <router-link to="/ban-do" class="btn-secondary">Xem Bản Đồ Chi Tiết</router-link>
+          <router-link to="/ban-do" class="btn-secondary"
+            >Xem Bản Đồ Chi Tiết</router-link
+          >
         </div>
       </div>
     </section>
@@ -53,10 +76,16 @@
     <section class="weather-news">
       <div class="section-header">
         <h2><i class="fas fa-newspaper"></i> Tin Tức Thời Tiết Mới Nhất</h2>
-        <router-link to="/tin-tuc" class="view-all">Xem tất cả <i class="fas fa-arrow-right"></i></router-link>
+        <router-link to="/tin-tuc" class="view-all"
+          >Xem tất cả <i class="fas fa-arrow-right"></i
+        ></router-link>
       </div>
       <div class="news-grid">
-        <div class="news-card" v-for="(news, index) in weatherNews" :key="index">
+        <div
+          class="news-card"
+          v-for="(news, index) in weatherNews"
+          :key="index"
+        >
           <div class="news-image">
             <img :src="news.image" :alt="news.title" />
           </div>
@@ -66,7 +95,9 @@
             </div>
             <h3 class="news-title">{{ news.title }}</h3>
             <p class="news-excerpt">{{ news.excerpt }}</p>
-            <router-link :to="news.link" class="read-more">Đọc tiếp <i class="fas fa-angle-right"></i></router-link>
+            <router-link :to="news.link" class="read-more"
+              >Đọc tiếp <i class="fas fa-angle-right"></i
+            ></router-link>
           </div>
         </div>
       </div>
@@ -84,7 +115,9 @@
           </div>
           <h3>Dự Đoán Thời Tiết</h3>
           <p>Dự đoán thời tiết dựa trên các thông số đầu vào</p>
-          <router-link to="/du-bao-thoi-tiet" class="btn-tool">Sử dụng ngay</router-link>
+          <router-link to="/du-bao-thoi-tiet" class="btn-tool"
+            >Sử dụng ngay</router-link
+          >
         </div>
         <div class="tool-card">
           <div class="tool-icon">
@@ -92,7 +125,9 @@
           </div>
           <h3>Dự Báo 10 Ngày</h3>
           <p>Xem dự báo thời tiết chi tiết trong 10 ngày tới</p>
-          <router-link to="/thoi-tiet/10-ngay" class="btn-tool">Xem dự báo</router-link>
+          <router-link to="/thoi-tiet/10-ngay" class="btn-tool"
+            >Xem dự báo</router-link
+          >
         </div>
         <div class="tool-card">
           <div class="tool-icon">
@@ -100,7 +135,19 @@
           </div>
           <h3>Cảnh Báo Lũ Lụt</h3>
           <p>Thông tin cảnh báo lũ lụt tại các khu vực</p>
-          <router-link to="/canh-bao/lu-lut" class="btn-tool">Xem cảnh báo</router-link>
+          <router-link to="/canh-bao/lu-lut" class="btn-tool"
+            >Xem cảnh báo</router-link
+          >
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon">
+            <i class="fas fa-sun"></i>
+          </div>
+          <h3>Chỉ số UV & Chất lượng không khí</h3>
+          <p>Theo dõi chỉ số UV và chất lượng không khí để bảo vệ sức khỏe</p>
+          <router-link to="/chat-luong-khong-khi" class="btn-tool"
+            >Kiểm tra ngay</router-link
+          >
         </div>
       </div>
     </section>
@@ -110,19 +157,32 @@
       <div class="chatbot-content">
         <div class="chatbot-text">
           <h2>Trợ Lý Thời Tiết Thông Minh</h2>
-          <p>Đặt câu hỏi và nhận thông tin thời tiết ngay lập tức từ trợ lý ảo của chúng tôi.</p>
+          <p>
+            Đặt câu hỏi và nhận thông tin thời tiết ngay lập tức từ trợ lý ảo
+            của chúng tôi.
+          </p>
           <ul class="chatbot-features">
-            <li><i class="fas fa-check-circle"></i> Dự báo thời tiết theo địa điểm</li>
-            <li><i class="fas fa-check-circle"></i> Thông tin về nhiệt độ, độ ẩm, gió</li>
+            <li>
+              <i class="fas fa-check-circle"></i> Dự báo thời tiết theo địa điểm
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i> Thông tin về nhiệt độ, độ ẩm,
+              gió
+            </li>
             <li><i class="fas fa-check-circle"></i> Cảnh báo thời tiết xấu</li>
-            <li><i class="fas fa-check-circle"></i> Gợi ý trang phục phù hợp</li>
+            <li>
+              <i class="fas fa-check-circle"></i> Gợi ý trang phục phù hợp
+            </li>
           </ul>
-          <button class="btn-chatbot" @click="openChatbot">
+          <button class="btn-chatbot" @click="openChatbot()">
             <i class="fas fa-comments"></i> Chat Ngay
           </button>
         </div>
         <div class="chatbot-image">
-          <img src="/images/chatbot.png" alt="Trợ lý thời tiết" />
+          <img
+            src="https://chat360.io/wp-content/uploads/2021/05/Top-10-website-chatbot-examples-of-2022.svg"
+            alt="Trợ lý thời tiết"
+          />
         </div>
       </div>
     </section>
@@ -135,86 +195,194 @@ export default {
     return {
       cities: [
         {
-          name: 'Hà Nội',
-          temp: 28,
-          weather: 'Có mây',
-          humidity: 75,
-          wind: 12,
-          icon: 'https://cdn.haitrieu.com/wp-content/uploads/2022/06/Logo-Ha-Noi.png'
+          name: "Hà Nội",
+          temp: 0,
+          weather: "",
+          humidity: 0,
+          wind: 0,
+          icon: "",
         },
         {
-          name: 'Đà Nẵng',
-          temp: 32,
-          weather: 'Nắng',
-          humidity: 65,
-          wind: 8,
-          icon: 'https://cdn.haitrieu.com/wp-content/uploads/2022/06/Logo-Thanh-Pho-Da-Nang.png'
+          name: "Đà Nẵng",
+          temp: 0,
+          weather: "",
+          humidity: 0,
+          wind: 0,
+          icon: "",
         },
         {
-          name: 'TP. Hồ Chí Minh',
-          temp: 33,
-          weather: 'Nắng nóng',
-          humidity: 70,
-          wind: 10,
-          icon: 'https://cdn.haitrieu.com/wp-content/uploads/2022/07/Thanh-pho-Ho-Chi-Minh-1.png'
+          name: "Ho Chi Minh", // Thay đổi từ "TP. Hồ Chí Minh" thành "Ho Chi Minh"
+          displayName: "TP. Hồ Chí Minh", // Tên hiển thị giữ nguyên
+          temp: 0,
+          weather: "",
+          humidity: 0,
+          wind: 0,
+          icon: "",
         },
         {
-          name: 'Huế',
-          temp: 30,
-          weather: 'Mưa rào',
-          humidity: 80,
-          wind: 15,
-          icon: 'https://sp-ao.shortpixel.ai/client/q_glossy,ret_img,w_300,h_300/https://onedesign.com.vn/wp-content/uploads/2021/02/thi%E1%BA%BFt-k%E1%BA%BF-logo-th%C3%A0nh-ph%E1%BB%91-hu%E1%BA%BF-300x300.png'
+          name: "Huế",
+          temp: 0,
+          weather: "",
+          humidity: 0,
+          wind: 0,
+          icon: "",
         },
-        
         {
-          name: 'Cần Thơ',
-          temp: 32,
-          weather: 'Mây rải rác',
-          humidity: 72,
-          wind: 7,
-          icon: 'https://cdn.haitrieu.com/wp-content/uploads/2022/06/Logo-Thanh-Pho-Can-Tho.png'
-        }
+          name: "Cần Thơ",
+          temp: 0,
+          weather: "",
+          humidity: 0,
+          wind: 0,
+          icon: "",
+        },
       ],
       weatherNews: [
         {
-          title: 'Cảnh báo mưa lớn tại các tỉnh miền Trung trong tuần tới',
-          excerpt: 'Theo dự báo, các tỉnh miền Trung sẽ có mưa lớn kéo dài từ ngày 15/7 đến 20/7, người dân cần đề phòng ngập lụt...',
-          date: '12/07/2024',
-          image: '/images/news/rain-news.jpg',
-          link: '/tin-tuc/mua-lon-mien-trung'
+          image:
+            "https://bcp.cdnchinhphu.vn/334894974524682240/2022/9/7/mua-1662518286474221449839.jpg",
+          date: "01/03/2025",
+          title: "Cảnh báo mưa lớn tại các tỉnh miền Bắc trong tuần tới",
+          excerpt:
+            "Trung tâm Dự báo Khí tượng Thủy văn Quốc gia dự báo các tỉnh miền Bắc sẽ có mưa lớn trong tuần tới do ảnh hưởng của không khí lạnh kết hợp với hội tụ gió trên cao.",
+          link: "/tin-tuc/mua-lon-mien-bac",
         },
         {
-          title: 'Nắng nóng gay gắt tại miền Bắc, nhiệt độ có thể lên tới 40 độ C',
-          excerpt: 'Đợt nắng nóng mới đang ảnh hưởng đến các tỉnh miền Bắc với nhiệt độ cao nhất có thể lên tới 40 độ C...',
-          date: '10/07/2024',
-          image: '/images/news/hot-news.jpg',
-          link: '/tin-tuc/nang-nong-mien-bac'
+          image:
+            "https://cdn.tuoitre.vn/thumb_w/480/471584752817336320/2024/6/19/vung-ap-thap-1718788829887564393957.jpg",
+          date: "28/02/2025",
+          title: "Biển Đông sắp hình thành áp thấp nhiệt đới",
+          excerpt:
+            "Theo dự báo mới nhất, một vùng áp thấp đang hình thành trên khu vực giữa Biển Đông và có khả năng mạnh lên thành áp thấp nhiệt đới trong 24-48 giờ tới.",
+          link: "/tin-tuc/ap-thap-nhiet-doi",
         },
         {
-          title: 'Bão số 3 đang hình thành trên biển Đông, dự kiến đổ bộ vào cuối tuần',
-          excerpt: 'Cơn bão số 3 đang hình thành trên biển Đông và dự kiến sẽ đổ bộ vào các tỉnh ven biển miền Trung vào cuối tuần...',
-          date: '08/07/2024',
-          image: '/images/news/storm-news.jpg',
-          link: '/tin-tuc/bao-so-3'
-        }
-      ]
-    }
+          image:
+            "https://img.cand.com.vn/resize/800x800/NewFiles/Images/2024/07/26/anh_16-1721947200045.jpg",
+          date: "26/02/2025",
+          title: "Nắng nóng gay gắt ở miền Trung, nhiệt độ lên tới 40 độ C",
+          excerpt:
+            "Các tỉnh miền Trung đang trải qua đợt nắng nóng gay gắt kéo dài với nhiệt độ nhiều nơi lên tới 40 độ C. Chuyên gia khuyến cáo người dân hạn chế ra ngoài trong khoảng thời gian từ 11-16 giờ.",
+          link: "/tin-tuc/nang-nong-mien-trung",
+        },
+      ],
+      API_KEY: "9c0b68c69792a1544c52532b132f7a8f", // API key OpenWeatherMap
+    };
   },
   methods: {
+    // Cập nhật phương thức openChatbot
+    // Thay thế phương thức openChatbot
+    // Cập nhật với selector chính xác sau khi kiểm tra DOM
+    // Sửa phương thức openChatbot để tìm đúng phần tử chat
     openChatbot() {
-      // Mở chatbot
-      const chatbotContainer = document.getElementById('coze-chat-container');
-      if (chatbotContainer) {
-        // Tìm nút mở chatbot và click vào nó
-        const chatbotButton = chatbotContainer.querySelector('button');
-        if (chatbotButton) {
-          chatbotButton.click();
+      // Thêm dấu "." để chỉ định rằng đây là class name
+      const chatButton = document.querySelector(".ab1ac9d9bab12da47298");
+
+      if (chatButton) {
+        // Click vào chính phần tử đó hoặc tìm thẻ img bên trong và click
+        chatButton.click();
+        console.log("Đã tìm thấy và click vào nút chat");
+      } else {
+        console.error("Không tìm thấy nút chat với class ab1ac9d9bab12da47298");
+
+        // Phương án dự phòng: tìm kiếm các phần tử liên quan đến Coze
+        const cozeElements = document.querySelectorAll(
+          '[class*="coze"], [id*="coze"]'
+        );
+        if (cozeElements.length > 0) {
+          console.log("Tìm thấy phần tử Coze thay thế:", cozeElements[0]);
+          cozeElements[0].click();
         }
       }
-    }
-  }
-}
+    },
+
+    // Hàm chuyển đổi tiếng Việt có dấu sang không dấu
+    removeVietnameseAccents(str) {
+      return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D");
+    },
+    getWeatherGif(iconCode) {
+      // Xác định mã icon cơ bản (không có đuôi d/n)
+      const baseCode = iconCode.substring(0, 2);
+      // Xác định nếu là ngày (d) hay đêm (n)
+      const isDaytime = iconCode.includes("d");
+
+      // Các trường hợp cần phân biệt ngày/đêm
+      const needsDayNightVersion = ["01", "02", "10"];
+
+      if (needsDayNightVersion.includes(baseCode)) {
+        // Sử dụng phiên bản ngày/đêm riêng biệt
+        return `/weather-icons/${iconCode}.gif`;
+      } else {
+        // Sử dụng phiên bản chung (không phân biệt ngày/đêm)
+        return `/weather-icons/${baseCode}.gif`;
+      }
+    },
+
+    // Lấy dữ liệu thời tiết cho một thành phố
+    // Sửa phương thức fetchCityWeather
+    async fetchCityWeather(cityName, index) {
+      try {
+        // THÊM VÀO: Gọi API OpenWeatherMap để lấy dữ liệu thời tiết
+        let response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${this.API_KEY}&lang=vi`
+        );
+
+        // Nếu không tìm thấy, thử với tên không dấu
+        if (!response.ok) {
+          const cityNoAccent = this.removeVietnameseAccents(cityName);
+          response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${cityNoAccent}&units=metric&appid=${this.API_KEY}&lang=vi`
+          );
+        }
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // Cập nhật thông tin thời tiết cho thành phố
+          this.cities[index].temp = Math.round(data.main.temp);
+          this.cities[index].weather = data.weather[0].description;
+          this.cities[index].humidity = data.main.humidity;
+          this.cities[index].wind = Math.round(data.wind.speed * 3.6); // Chuyển từ m/s sang km/h
+
+          // Lấy mã icon từ API
+          const iconCode = data.weather[0].icon;
+
+          // Sử dụng file GIF động từ thư mục local
+          this.cities[index].icon = this.getWeatherGif(iconCode);
+
+          // Lưu icon mặc định từ API làm phương án dự phòng nếu GIF không tải được
+          this.cities[
+            index
+          ].fallbackIcon = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        }
+      } catch (error) {
+        console.error(`Lỗi khi lấy dữ liệu thời tiết cho ${cityName}:`, error);
+      }
+    },
+
+    // Lấy dữ liệu thời tiết cho tất cả các thành phố
+    async fetchAllCitiesWeather() {
+      const promises = this.cities.map((city, index) =>
+        this.fetchCityWeather(city.name, index)
+      );
+
+      await Promise.all(promises);
+    },
+    handleIconError(index) {
+      // Nếu GIF không tải được, sử dụng icon mặc định từ OpenWeatherMap
+      if (this.cities[index].fallbackIcon) {
+        this.cities[index].icon = this.cities[index].fallbackIcon;
+      }
+    },
+  },
+  created() {
+    // Lấy dữ liệu thời tiết khi component được tạo
+    this.fetchAllCitiesWeather();
+  },
+};
 </script>
 
 <style scoped>
@@ -225,7 +393,7 @@ export default {
 /* Hero Section */
 .hero-section {
   height: 500px;
-  background-image: url('https://www.weathercompany.com/wp-content/uploads/2024/01/hero-data-vis-world-weather-explainer-vid.jpg');
+  background-image: url("https://www.weathercompany.com/wp-content/uploads/2024/01/hero-data-vis-world-weather-explainer-vid.jpg");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -239,33 +407,46 @@ export default {
   overflow: hidden;
 }
 
+.hero-section {
+  height: 500px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  margin-bottom: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
 .hero-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 .hero-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: 800px;
   padding: 0 20px;
-}
-
-.hero-content h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.hero-content p {
-  font-size: 1.2rem;
-  margin-bottom: 30px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  font-size: larger;
 }
 
 .btn-primary {
@@ -627,11 +808,11 @@ export default {
   .hero-content h1 {
     font-size: 2.5rem;
   }
-  
+
   .chatbot-content {
     flex-direction: column;
   }
-  
+
   .chatbot-image {
     order: -1;
     margin-bottom: 20px;
@@ -642,15 +823,15 @@ export default {
   .hero-section {
     height: 400px;
   }
-  
+
   .hero-content h1 {
     font-size: 2rem;
   }
-  
+
   .city-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
-  
+
   .map-container {
     height: 300px;
   }
@@ -660,16 +841,17 @@ export default {
   .hero-section {
     height: 350px;
   }
-  
+
   .hero-content h1 {
     font-size: 1.8rem;
   }
-  
+
   .city-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-  .news-grid, .tools-grid {
+
+  .news-grid,
+  .tools-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -41,7 +41,7 @@
               <a href="/du-bao-thoi-tiet" class="nav-link"> <i class="fa-solid fa-cloud-sun-rain"></i> DỰ ĐOÁN THỜI TIẾT </a>
             </li>
             <li class="nav-item dropdown">
-              <a href="#" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> THỜI TIẾT <i class="fas fa-angle-down"></i></a>
+              <a href="/thoi-tiet" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> THỜI TIẾT <i class="fas fa-angle-down"></i></a>
               <ul class="dropdown-menu">
                 <li><router-link to="/thoi-tiet/mien-bac">Miền Bắc</router-link></li>
                 <li><router-link to="/thoi-tiet/mien-trung">Miền Trung</router-link></li>

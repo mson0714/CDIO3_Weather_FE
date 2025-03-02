@@ -27,6 +27,43 @@ const routes = [
             layout: 'blank'
         }
     },
+    {
+        path : '/thoi-tiet',
+        component: ()=>import('../components/ThoiTiet/DuBao/index.vue'),
+        
+    },
+    {
+        path : '/thoi-tiet/mien-bac',
+        component: ()=>import('../components/ThoiTiet/MienBac/index.vue'),
+        
+    },
+    {
+        path : '/thoi-tiet/mien-trung',
+        component: ()=>import('../components/ThoiTiet/MienTrung/index.vue'),
+        
+    },
+    {
+        path : '/thoi-tiet/mien-nam',
+        component: ()=>import('../components/ThoiTiet/MienNam/index.vue'),
+        
+    },
+    {
+        path : '/chat-luong-khong-khi',
+        component: ()=>import('../components/CanhBaoUV/index.vue'),
+        
+    },
+    {
+        path : '/thoi-tiet/10-ngay',
+        component: ()=>import('../components/ThoiTiet/10Ngay/index.vue'),
+        
+    },
+    {
+        path : '/canh-bao/lu-lut',
+        component: ()=>import('../components/CanhBaoLu/index.vue'),
+   
+        
+    },
+
    
         
    
