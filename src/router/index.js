@@ -63,6 +63,12 @@ const routes = [
    
         
     },
+    {
+        path : '/tin-tuc',
+        component: ()=>import('../components/TinTuc/index.vue'),
+   
+        
+    },
 
    
         

@@ -52,9 +52,8 @@
       </div>
       
       <div class="social-login">
-        <button class="btn-social btn-google">
-          <i class="fab fa-google"></i> Google
-        </button>
+        
+          <GoogleLogin :callback="callback"/>
         <button class="btn-social btn-facebook">
           <i class="fab fa-facebook-f"></i> Facebook
         </button>
@@ -89,8 +88,36 @@
 </template>
 
 <script>
+import axios from 'axios'
+import { decodeCredential } from 'vue3-google-login'
 export default {
-  name: 'DangNhap'
+  name: 'DangNhap',
+  data() {
+    return {
+      
+    }
+  },
+
+  methods: {
+    callback(response) {
+      var thong_Tin = decodeCredential(response.credential)
+      var user = {
+        'email': thong_Tin.email,
+        'ho_ten': thong_Tin.name,
+        'anhDaiDien': thong_Tin.imageUrl
+      }
+      axios
+      .post('http://127.0.0.1:8000/api/nguoi-dung/dang-nhap-gg', user)
+      .then(response => {
+        if(response.data.status == 1){
+          this.$toast.success('Đăng nhập thành công')
+          this.$router.push('/')
+        }else{
+          this.$toast.error('Đăng nhập thất bại')
+        }
+      })
+    }
+  }
 }
 </script>
 

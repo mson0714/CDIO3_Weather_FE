@@ -38,7 +38,7 @@
               <router-link to="/" class="nav-link"><i class="fa-solid fa-house text-white"></i> TRANG CHỦ</router-link>
             </li>
             <li class="nav-item ">
-              <a href="/du-bao-thoi-tiet" class="nav-link"> <i class="fa-solid fa-cloud-sun-rain"></i> DỰ ĐOÁN THỜI TIẾT </a>
+              <a href="/du-bao-thoi-tiet" class="nav-link"> <i class="fa-solid fa-cloud-sun-rain"></i> DỰ ĐOÁN THỜI TIẾT BẰNG AI </a>
             </li>
             <li class="nav-item dropdown">
               <a href="/thoi-tiet" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> THỜI TIẾT <i class="fas fa-angle-down"></i></a>
@@ -77,9 +77,9 @@
             <h3>TRUNG TÂM DỰ BÁO THỜI TIẾT</h3>
             <p>Cung cấp thông tin dự báo thời tiết chính xác, kịp thời và đáng tin cậy.</p>
             <div class="contact-info">
-              <p><i class="fas fa-map-marker-alt"></i> 123 Đường Thời Tiết, Quận Dự Báo, TP. Hà Nội</p>
-              <p><i class="fas fa-phone"></i> (024) 1234 5678</p>
-              <p><i class="fas fa-envelope"></i> info@dubaothoitiet.vn</p>
+              <p><i class="fas fa-map-marker-alt"></i> Đại học duy tân - Đà nẵng</p>
+              <p><i class="fas fa-phone"></i> 0876070104 </p>
+              <p><i class="fas fa-envelope"></i> trinhminhson2004@gmail.com</p>
             </div>
           </div>
           
@@ -87,7 +87,7 @@
             <h4>LIÊN KẾT NHANH</h4>
             <ul>
               <li><router-link to="/">Trang chủ</router-link></li>
-              <li><router-link to="/du-bao">Dự báo</router-link></li>
+              <li><router-link to="/du-bao-thoi-tiet">Dự đoán bằng AI</router-link></li>
               <li><router-link to="/thoi-tiet">Thời tiết</router-link></li>
               <li><router-link to="/ban-do">Bản đồ</router-link></li>
               <li><router-link to="/tin-tuc">Tin tức</router-link></li>
@@ -102,7 +102,7 @@
               <button>Đăng ký</button>
             </div>
             <div class="social-links">
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.facebook.com/khunglongbaochuatapmuabale"><i class="fab fa-facebook-f"></i></a>
               <a href="#"><i class="fab fa-twitter"></i></a>
               <a href="#"><i class="fab fa-youtube"></i></a>
               <a href="#"><i class="fab fa-instagram"></i></a>
@@ -111,7 +111,7 @@
         </div>
         
         <div class="footer-bottom">
-          <p>&copy; 2024 Trung tâm Dự báo Thời tiết. Tất cả quyền được bảo lưu.</p>
+          <p>&copy; 2024 Mô hình dự đoán thời tiết CDIO 3. Minh Son - Trần Lãnh.</p>
         </div>
       </div>
     </footer>
