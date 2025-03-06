@@ -38,25 +38,28 @@
               <router-link to="/" class="nav-link"><i class="fa-solid fa-house text-white"></i> TRANG CHỦ</router-link>
             </li>
             <li class="nav-item ">
-              <a href="/du-bao-thoi-tiet" class="nav-link"> <i class="fa-solid fa-cloud-sun-rain"></i> DỰ ĐOÁN THỜI TIẾT BẰNG AI </a>
+              <a href="/du-bao-thoi-tiet" class="nav-link"> <i class="fa-solid fa-cloud-sun-rain"></i> DỰ ĐOÁN BẰNG AI </a>
             </li>
             <li class="nav-item dropdown">
-              <a href="/thoi-tiet" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> THỜI TIẾT <i class="fas fa-angle-down"></i></a>
-              <ul class="dropdown-menu">
-                <li><router-link to="/thoi-tiet/mien-bac">Miền Bắc</router-link></li>
-                <li><router-link to="/thoi-tiet/mien-trung">Miền Trung</router-link></li>
-                <li><router-link to="/thoi-tiet/mien-nam">Miền Nam</router-link></li>
+              <a href="/thoi-tiet" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> THỜI TIẾT </a>
+              
+            </li>
+            <li class="nav-item">
+              <router-link to="/canh-bao/lu-lut" class="nav-link"><i class="fa-solid fa-house-flood-water"></i> CẢNH BÁO LŨ LỤT</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/thoi-tiet/10-ngay" class="nav-link"><i class="fa-solid fa-calendar-days"></i> THỜI TIẾT 10 NGÀY</router-link>
+            </li> 
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link"><i class="fa-solid fa-cloud text-white"></i> CÁC CHỨC NĂNG KHÁC <i class="fas fa-angle-down"></i></a>
+              <ul class="dropdown-menu nav-primary">
+             
+                <li><router-link to="/chat-luong-khong-khi"><b><i class="fa-solid fa-wind"></i> Chất lượng không khí</b></router-link></li>
+                <li><router-link to="/tin-tuc"><b><i class="fa-solid fa-newspaper"></i> Tin tức</b></router-link></li>
+                <li><router-link to="/ban-do"> <i class="fa-solid fa-map-location-dot"></i> <b>Bản đồ</b></router-link></li>
               </ul>
             </li>
-            <li class="nav-item">
-              <router-link to="/ban-do" class="nav-link"> <i class="fa-solid fa-map-location-dot"></i> BẢN ĐỒ</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/tin-tuc" class="nav-link"> <i class="fa-solid fa-newspaper"></i> TIN TỨC</router-link>
-            </li> 
-            <li class="nav-item">
-              <router-link to="/lien-he" class="nav-link"> <i class="fa-solid fa-phone"></i> LIÊN HỆ</router-link>
-            </li>
+            
           </ul>
         </div>
       </nav>
@@ -145,6 +148,10 @@ body {
   line-height: 1.6;
   color: #333;
   background-color: #f5f5f5;
+}
+.dropdown-menu {
+    min-width: 250px; /* Điều chỉnh độ rộng */
+    padding: 10px 20px; /* Tăng padding để dài hơn */
 }
 
 .container {

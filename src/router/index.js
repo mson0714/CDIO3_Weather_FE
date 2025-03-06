@@ -33,21 +33,6 @@ const routes = [
         
     },
     {
-        path : '/thoi-tiet/mien-bac',
-        component: ()=>import('../components/ThoiTiet/MienBac/index.vue'),
-        
-    },
-    {
-        path : '/thoi-tiet/mien-trung',
-        component: ()=>import('../components/ThoiTiet/MienTrung/index.vue'),
-        
-    },
-    {
-        path : '/thoi-tiet/mien-nam',
-        component: ()=>import('../components/ThoiTiet/MienNam/index.vue'),
-        
-    },
-    {
         path : '/chat-luong-khong-khi',
         component: ()=>import('../components/CanhBaoUV/index.vue'),
         

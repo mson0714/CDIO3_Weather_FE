@@ -246,13 +246,10 @@
   </div>
 </template>
 <script>
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-// Import MapBox
-import "mapbox-gl/dist/mapbox-gl.css";
-import mapboxgl from "mapbox-gl";
-// Tích hợp MapBox với Leaflet
-import "mapbox-gl-leaflet";
+
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
 
 export default {
   data() {
@@ -330,111 +327,59 @@ export default {
     },
 
         // Cập nhật phương thức initializeMap để sử dụng mapbox-gl-leaflet đúng cách
-    initializeMap() {
-      // Kiểm tra nếu map đã tồn tại
+        initializeMap() {
+      // Xóa map cũ nếu đã tồn tại
       if (this.map) {
         this.map.remove();
       }
     
-      // Kiểm tra phần tử DOM có tồn tại không
+      // Kiểm tra phần tử DOM
       const mapElement = document.getElementById("flood-map");
       if (!mapElement) {
         console.error("Không tìm thấy phần tử #flood-map!");
         return;
       }
     
-      console.log("Phần tử bản đồ được tìm thấy, khởi tạo bản đồ");
+      console.log("Khởi tạo bản đồ MapBox");
     
-      // Đảm bảo kích thước phần tử > 0
+      // Đảm bảo kích thước phần tử
       if (mapElement.clientHeight === 0) {
         mapElement.style.height = "500px";
       }
     
       try {
-        // Thay thế token này bằng token MapBox của bạn
+        // Token và style MapBox của bạn
         const MAPBOX_TOKEN = 'pk.eyJ1IjoibW9uaHNpbjA3MDEiLCJhIjoiY20zc3B5dGNrMDA5YzJqb2doOWxoa3I1dyJ9.Nl45MggpNqjbB2_w-rVUqg';
-        
-        // Khởi tạo Leaflet map trước
-        this.map = L.map('flood-map').setView([16.0, 106.0], 6);
-        
-        // Sử dụng MapBox GL Layer với Leaflet
         mapboxgl.accessToken = MAPBOX_TOKEN;
-        
-        // Thêm MapBox GL Layer vào Leaflet
-        const mapboxLayer = L.mapboxGL({
-          accessToken: MAPBOX_TOKEN,
-          style: 'mapbox://styles/mapbox/streets-v11'
-        }).addTo(this.map);
-        
-        // Thêm đánh dấu và vùng lãnh thổ Hoàng Sa
-        L.marker([16.5, 112.0])
-          .addTo(this.map)
-          .bindPopup("<b>Quần đảo Hoàng Sa</b><br>Thuộc chủ quyền Việt Nam")
-          .openPopup();
     
-        // Thêm đánh dấu và vùng lãnh thổ Trường Sa
-        L.marker([10.0, 114.0])
-          .addTo(this.map)
-          .bindPopup("<b>Quần đảo Trường Sa</b><br>Thuộc chủ quyền Việt Nam");
+        // Khởi tạo MapBox map với style custom của bạn
+        this.map = new mapboxgl.Map({
+          container: 'flood-map',
+          style: 'mapbox://styles/monhsin0701/cm3sr6yzn009701s81bbp34rg',
+          center: [106.0, 16.0], // [lng, lat] - MapBox sử dụng thứ tự ngược với Leaflet
+          zoom: 6
+        });
     
-        // Tạo vùng biên giới cho Hoàng Sa với style đẹp hơn
-        const hoangSaPolygon = L.polygon([
-          [17.0, 111.0],
-          [17.0, 113.0],
-          [16.0, 113.0],
-          [16.0, 111.0]
-        ], { 
-          color: '#0066ff', 
-          fillColor: '#3388ff',
-          fillOpacity: 0.2,
-          weight: 3,
-          dashArray: '5, 5',
-          smoothFactor: 1
-        }).addTo(this.map);
-        
-        hoangSaPolygon.bindPopup("<b>Quần đảo Hoàng Sa</b><br>Lãnh thổ Việt Nam");
+        // Thêm controls
+        this.map.addControl(new mapboxgl.NavigationControl());
     
-        // Tạo vùng biên giới cho Trường Sa với style đẹp hơn
-        const truongsaPolygon = L.polygon([
-          [11.0, 113.0],
-          [11.0, 115.0],
-          [9.0, 115.0],
-          [9.0, 113.0]
-        ], { 
-          color: '#0066ff', 
-          fillColor: '#3388ff',
-          fillOpacity: 0.2,
-          weight: 3,
-          dashArray: '5, 5',
-          smoothFactor: 1
-        }).addTo(this.map);
-        
-        truongsaPolygon.bindPopup("<b>Quần đảo Trường Sa</b><br>Lãnh thổ Việt Nam");
-    
-        // Tạo lớp mưa cho OpenWeatherMap
-        this.rainLayer = L.tileLayer(
-          "https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=9c0b68c69792a1544c52532b132f7a8f",
-          {
-            attribution: "OpenWeatherMap",
-            maxZoom: 18,
-            opacity: 0.6
+        // Sự kiện khi map đã load xong
+        this.map.on('load', () => {
+          // Thêm lớp mưa (rainfall layer) nếu cần
+          this.setupRainLayer();
+          
+          // Thêm các marker cảnh báo
+          if (this.warnings.length > 0) {
+            this.displayWarningsOnMap();
           }
-        );
     
-        // Hiển thị cảnh báo lên bản đồ nếu đã có dữ liệu
-        if (this.warnings.length > 0) {
-          this.displayWarningsOnMap();
-        }
-    
-        // Đảm bảo bản đồ được cập nhật kích thước chính xác
-        setTimeout(() => {
-          this.map.invalidateSize();
-        }, 100);
+          // Thêm dữ liệu về Hoàng Sa, Trường Sa
+          this.addTerritorialFeatures();
+        });
       } catch (error) {
-        console.error("Lỗi khi khởi tạo bản đồ:", error);
+        console.error("Lỗi khởi tạo bản đồ:", error);
       }
     },
-
     displayWarningsOnMap() {
       if (!this.map || !this.warnings.length) return;
 
@@ -505,22 +450,118 @@ export default {
         this.map.setView([16.0, 106.0], 6);
       }
     },
+        setupRainLayer() {
+      // Đảm bảo map đã được khởi tạo
+      if (!this.map) return;
+    
+      // Thêm nguồn dữ liệu cho lớp mưa
+      this.map.addSource('rainfall', {
+        type: 'raster',
+        tiles: [
+          'https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=9c0b68c69792a1544c52532b132f7a8f'
+        ],
+        tileSize: 256,
+        attribution: 'OpenWeatherMap'
+      });
+    
+      // Thêm lớp mưa (không hiển thị ban đầu)
+      this.map.addLayer({
+        id: 'rainfall-layer',
+        type: 'raster',
+        source: 'rainfall',
+        paint: {
+          'raster-opacity': 0.6
+        },
+        layout: {
+          visibility: 'none'
+        }
+      });
+    
+      this.rainLayer = 'rainfall-layer';
+    },
+        displayWarningsOnMap() {
+      // Đảm bảo map đã được khởi tạo
+      if (!this.map || !this.warnings.length) return;
+    
+      // Xóa markers cũ nếu có
+      if (this.warningMarkers && this.warningMarkers.length) {
+        this.warningMarkers.forEach(marker => marker.remove());
+      }
+    
+      this.warningMarkers = [];
+    
+      // Tạo và thêm các markers mới
+      this.warnings.forEach(warning => {
+        if (warning.coordinates) {
+          // Tạo phần tử HTML cho marker
+          const el = document.createElement('div');
+          el.className = `warning-marker ${warning.severity}`;
+          
+          // Thêm icon tùy theo loại cảnh báo
+          el.innerHTML = `<i class="fas fa-${this.getWarningIconType(warning.type)}" style="color:${this.getSeverityColor(warning.severity)};font-size:24px;"></i>`;
+    
+          // Tạo popup
+          const popup = new mapboxgl.Popup({ offset: 25 })
+            .setHTML(`
+              <div class="warning-popup">
+                <h4>${warning.title}</h4>
+                <div class="popup-location">${warning.district}, ${warning.province}</div>
+                <div class="popup-metrics">
+                  <div><i class="fas fa-ruler-vertical"></i> ${warning.waterLevel} m</div>
+                  <div><i class="fas fa-tint"></i> ${warning.rainfall} mm</div>
+                </div>
+                <button class="popup-details-btn" onclick="document.dispatchEvent(new CustomEvent('show-warning-details', {detail: ${warning.id}}))">
+                  Chi tiết
+                </button>
+              </div>
+            `);
+    
+          // Tạo và thêm marker
+          const marker = new mapboxgl.Marker(el)
+            .setLngLat([warning.coordinates.lng, warning.coordinates.lat])
+            .setPopup(popup)
+            .addTo(this.map);
+    
+          this.warningMarkers.push(marker);
+        }
+      });
+    
+      // Lắng nghe sự kiện từ popup để hiển thị chi tiết
+      document.addEventListener("show-warning-details", (event) => {
+        const warningId = event.detail;
+        const warning = this.warnings.find((w) => w.id === warningId);
+        if (warning) {
+          this.showWarningDetails(warning);
+        }
+      });
+    },
 
-    toggleMapLayers() {
+       toggleMapLayers() {
       if (!this.map || !this.rainLayer) return;
-
+    
       this.showRainLayer = !this.showRainLayer;
-
-      if (this.showRainLayer) {
-        this.rainLayer.addTo(this.map);
-      } else {
-        this.rainLayer.remove();
+      
+      // Thay đổi visibility của lớp mưa
+      this.map.setLayoutProperty(
+        this.rainLayer,
+        'visibility',
+        this.showRainLayer ? 'visible' : 'none'
+      );
+    },
+    
+    centerMapToVietnam() {
+      if (this.map) {
+        this.map.flyTo({
+          center: [106.0, 16.0],
+          zoom: 6,
+          essential: true
+        });
       }
     },
 
         // Cập nhật phương thức showWarningDetails để sử dụng MapBox
        // Cập nhật phương thức showWarningDetails
-    showWarningDetails(warning) {
+        showWarningDetails(warning) {
       this.selectedWarning = warning;
     
       // Tạo bản đồ chi tiết sau khi modal được hiển thị
@@ -529,45 +570,67 @@ export default {
           this.detailMap.remove();
         }
     
-        const MAPBOX_TOKEN = 'pk.eyJ1IjoibW9uaHNpbjA3MDEiLCJhIjoiY20zc3B5dGNrMDA5YzJqb2doOWxoa3I1dyJ9.Nl45MggpNqjbB2_w-rVUqg';
-        
-        // Khởi tạo Leaflet map trước
-        this.detailMap = L.map('detail-map').setView(
-          [warning.coordinates.lat, warning.coordinates.lng], 
-          12
-        );
-        
-        // Sử dụng MapBox GL Layer với Leaflet
-        mapboxgl.accessToken = MAPBOX_TOKEN;
-        
-        // Thêm MapBox GL Layer vào Leaflet
-        const mapboxLayer = L.mapboxGL({
-          accessToken: MAPBOX_TOKEN,
-          style: 'mapbox://styles/mapbox/streets-v11'
-        }).addTo(this.detailMap);
+        const mapboxToken = 'pk.eyJ1IjoibW9uaHNpbjA3MDEiLCJhIjoiY20zc3B5dGNrMDA5YzJqb2doOWxoa3I1dyJ9.Nl45MggpNqjbB2_w-rVUqg';
+        mapboxgl.accessToken = mapboxToken;
     
-        // Thêm marker cho vị trí cảnh báo với style đẹp hơn
-        const warningIcon = L.divIcon({
-          html: `<i class="fas fa-${this.getWarningIconType(warning.type)}" style="color:${this.getSeverityColor(warning.severity)};font-size:24px;"></i>`,
-          className: "warning-marker-detail",
-          iconSize: [40, 40]
+        // Khởi tạo MapBox map với style custom của bạn
+        this.detailMap = new mapboxgl.Map({
+          container: 'detail-map',
+          style: 'mapbox://styles/monhsin0701/cm3sr6yzn009701s81bbp34rg',
+          center: [warning.coordinates.lng, warning.coordinates.lat],
+          zoom: 12
         });
     
-        L.marker([warning.coordinates.lat, warning.coordinates.lng], {
-            icon: warningIcon
-          })
-          .addTo(this.detailMap)
-          .bindPopup(`<b>${warning.title}</b><br>${warning.district}, ${warning.province}`)
-          .openPopup();
+        // Thêm controls
+        this.detailMap.addControl(new mapboxgl.NavigationControl());
+    
+        // Sự kiện khi map đã load xong
+        this.detailMap.on('load', () => {
+          // Tạo phần tử HTML cho marker
+          const el = document.createElement('div');
+          el.className = `warning-marker-detail ${warning.severity}`;
+          el.innerHTML = `<i class="fas fa-${this.getWarningIconType(warning.type)}" style="color:${this.getSeverityColor(warning.severity)};font-size:24px;"></i>`;
+    
+          // Thêm marker
+          new mapboxgl.Marker(el)
+            .setLngLat([warning.coordinates.lng, warning.coordinates.lat])
+            .setPopup(new mapboxgl.Popup({ offset: 25 })
+              .setHTML(`<b>${warning.title}</b><br>${warning.district}, ${warning.province}`))
+            .addTo(this.detailMap)
+            .togglePopup();
+    
+          // Thêm vùng ảnh hưởng - circle
+          const radius = this.getImpactRadius(warning);
           
-        // Vùng ảnh hưởng - circle radius
-        const radius = this.getImpactRadius(warning);
-        L.circle([warning.coordinates.lat, warning.coordinates.lng], {
-          color: this.getSeverityColor(warning.severity),
-          fillColor: this.getSeverityColor(warning.severity),
-          fillOpacity: 0.2,
-          radius: radius * 1000 // Chuyển km thành m
-        }).addTo(this.detailMap);
+          // Thêm nguồn dữ liệu cho circle
+          this.detailMap.addSource('impact-area', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [warning.coordinates.lng, warning.coordinates.lat]
+              },
+              properties: {
+                radius: radius * 1000 // Chuyển km thành m
+              }
+            }
+          });
+    
+          // Thêm lớp circle
+          this.detailMap.addLayer({
+            id: 'impact-area-fill',
+            type: 'circle',
+            source: 'impact-area',
+            paint: {
+              'circle-radius': ['get', 'radius'],
+              'circle-color': this.getSeverityColor(warning.severity),
+              'circle-opacity': 0.2,
+              'circle-stroke-color': this.getSeverityColor(warning.severity),
+              'circle-stroke-width': 2
+            }
+          });
+        });
       });
     },
     
@@ -776,23 +839,40 @@ export default {
       ];
     },
   },
-  beforeUnmount() {
-    // Dọn dẹp Leaflet map khi component bị hủy
+    beforeUnmount() {
+    // Dọn dẹp map khi component bị hủy
     if (this.map) {
       this.map.remove();
     }
     if (this.detailMap) {
       this.detailMap.remove();
     }
+    
     // Xóa event listener
-    document.removeEventListener(
-      "show-warning-details",
-      this.showWarningDetails
-    );
+    document.removeEventListener("show-warning-details", this.showWarningDetails);
   },
 };
 </script>
 <style scoped>
+/* CSS cho MapBox markers */
+.warning-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.warning-marker-detail {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Các style khác giữ nguyên */
 .flood-warning-container {
   max-width: 1200px;
   margin: 0 auto;
