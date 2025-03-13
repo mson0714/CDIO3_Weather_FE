@@ -123,21 +123,47 @@ export default {
         });
     },
 
+        // Trong components/NguoiDung/DangNhap/index.vue
     dangNhap() {
       axios
-
         .post("http://127.0.0.1:8000/api/nguoi-dung/dang-nhap", this.login)
         .then((res) => {
           if (res.data.status) {
             this.$toast.success(res.data.message);
+            
+            // Lưu token
             localStorage.setItem("token_khach_hang", res.data.token);
-            this.$router.push("/");
+            
+            // Lưu thông tin người dùng
+            if (res.data.user) {
+              const userData = {
+                email: res.data.user.email,
+                ho_ten: res.data.user.ho_ten,
+                anhDaiDien: res.data.user.anhDaiDien || null,
+                token: res.data.token
+              };
+              
+              localStorage.setItem('user', JSON.stringify(userData));
+              
+              // Thông báo cho wrapper biết có sự thay đổi
+              window.dispatchEvent(new Event('user-logged-in'));
+            }
+            
+            // Chờ một chút để đảm bảo localStorage đã được cập nhật
+            setTimeout(() => {
+              // Chuyển hướng về trang chủ
+              this.$router.push("/");
+              
+              // HOẶC làm mới trang (chọn một trong hai cách)
+              // window.location.href = '/';
+            }, 300);
           } else {
             this.$toast.error(res.data.message);
           }
-        }) 
+        })
         .catch((err) => {
           console.log(err);
+          this.$toast.error("Đã xảy ra lỗi trong quá trình đăng nhập");
         });
     },
   },

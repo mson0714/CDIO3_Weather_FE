@@ -23,13 +23,13 @@
             <div v-if="isLoggedIn" class="user-profile">
               <div class="user-profile-dropdown">
                 <div class="user-info" @click="toggleDropdown">
-                  <img :src="userInfo.picture || 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg'" alt="Avatar" class="user-avatar" />
+                  <img :src="userInfo.anhDaiDien || 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg'" alt="Avatar" class="user-avatar" />
                   <span class="user-name">{{ userInfo.ho_ten }}</span>
                   <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="user-dropdown-menu" v-show="showUserMenu">
                   <div class="user-dropdown-header">
-                    <img :src="userInfo.picture || 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg'" alt="Avatar" class="dropdown-avatar" />
+                    <img :src="userInfo.anhDaiDien || 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg'" alt="Avatar" class="dropdown-avatar" />
                     <div>
                       <div class="dropdown-name">{{ userInfo.ho_ten }}</div>
                       <div class="dropdown-email">{{ userInfo.email }}</div>
@@ -164,34 +164,53 @@ export default {
       userInfo: {
         ho_ten: '',
         email: '',
-        picture: ''
+        anhDaiDien: ''
       },
       showUserMenu: false
     }
   },
   
+    // Thêm phương thức này ở phần created của wrapper
   created() {
     this.checkUserLoggedIn();
+    
+    // Thêm sự kiện lắng nghe thay đổi localStorage
+    window.addEventListener('storage', this.handleStorageChange);
+    
+    // Thêm sự kiện lắng nghe custom event
+    window.addEventListener('user-logged-in', this.checkUserLoggedIn);
+    
     // Thêm event listener để đóng dropdown khi click ra ngoài
     document.addEventListener('click', this.closeDropdownOnClickOutside);
   },
   
-  beforeDestroy() {
-    // Dọn dẹp event listener khi component bị hủy
+  // Và thêm ở phần beforeDestroy/unmounted để dọn dẹp
+  beforeDestroy() { // hoặc unmounted() trong Vue 3
+    window.removeEventListener('storage', this.handleStorageChange);
+    window.removeEventListener('user-logged-in', this.checkUserLoggedIn);
     document.removeEventListener('click', this.closeDropdownOnClickOutside);
   },
   
   methods: {
-    checkUserLoggedIn() {
+        checkUserLoggedIn() {
       const userData = localStorage.getItem('user');
       if (userData) {
         try {
           this.userInfo = JSON.parse(userData);
           this.isLoggedIn = true;
+          console.log('User logged in:', this.userInfo); // Debug
         } catch (error) {
           console.error('Lỗi khi phân tích dữ liệu người dùng:', error);
           this.logout();
         }
+      } else {
+        this.isLoggedIn = false;
+        this.userInfo = {
+          ho_ten: '',
+          email: '',
+          anhDaiDien: ''
+        };
+        console.log('No user data found'); // Debug
       }
     },
     
@@ -206,21 +225,32 @@ export default {
         this.showUserMenu = false;
       }
     },
-    
-    logout() {
+        // Thêm vào phần methods
+    handleStorageChange(event) {
+      if (event.key === 'user') {
+        this.checkUserLoggedIn();
+      }
+    },
+        logout() {
       localStorage.removeItem('user');
+      localStorage.removeItem('token_khach_hang');
+      
       this.isLoggedIn = false;
       this.userInfo = {
         ho_ten: '',
         email: '',
-        picture: ''
+        anhDaiDien: ''
       };
       this.showUserMenu = false;
       
+      // Chuyển hướng về trang chủ sau khi đăng xuất
       if (this.$route.path !== '/') {
         this.$router.push('/');
       }
-    }
+      
+      // Tùy chọn: Làm mới trang
+      // window.location.reload();
+    },
   }
 };
 </script>
