@@ -19,7 +19,33 @@
               <button><i class="fas fa-search"></i></button>
             </div>
             
-            <div class="auth-buttons">
+            <!-- Thay đổi phần auth-buttons để hiển thị thông tin người dùng khi đã đăng nhập -->
+            <div v-if="isLoggedIn" class="user-profile">
+              <div class="user-profile-dropdown">
+                <div class="user-info" @click="toggleDropdown">
+                  <img :src="userInfo.picture || 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg'" alt="Avatar" class="user-avatar" />
+                  <span class="user-name">{{ userInfo.ho_ten }}</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown-menu" v-show="showUserMenu">
+                  <div class="user-dropdown-header">
+                    <img :src="userInfo.picture || 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg'" alt="Avatar" class="dropdown-avatar" />
+                    <div>
+                      <div class="dropdown-name">{{ userInfo.ho_ten }}</div>
+                      <div class="dropdown-email">{{ userInfo.email }}</div>
+                    </div>
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <ul class="dropdown-menu-items">
+                    <li><router-link to="/thong-tin-ca-nhan"><i class="fas fa-user"></i> Thông tin cá nhân</router-link></li>
+                    <li><router-link to="/theo-doi-thoi-tiet"><i class="fas fa-cloud"></i> Theo dõi thời tiết</router-link></li>
+                    <li><router-link to="/cai-dat"><i class="fas fa-cog"></i> Cài đặt</router-link></li>
+                    <li><a href="#" @click.prevent="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div v-else class="auth-buttons">
               <router-link to="/dang-nhap" class="btn-auth btn-login">
                 <i class="fas fa-sign-in-alt"></i> Đăng nhập
               </router-link>
@@ -27,6 +53,7 @@
                 <i class="fas fa-user-plus"></i> Đăng ký
               </router-link>
             </div>
+            
           </div>
         </div>
       </div>
@@ -130,7 +157,72 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      isLoggedIn: false,
+      userInfo: {
+        ho_ten: '',
+        email: '',
+        picture: ''
+      },
+      showUserMenu: false
+    }
+  },
+  
+  created() {
+    this.checkUserLoggedIn();
+    // Thêm event listener để đóng dropdown khi click ra ngoài
+    document.addEventListener('click', this.closeDropdownOnClickOutside);
+  },
+  
+  beforeDestroy() {
+    // Dọn dẹp event listener khi component bị hủy
+    document.removeEventListener('click', this.closeDropdownOnClickOutside);
+  },
+  
+  methods: {
+    checkUserLoggedIn() {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        try {
+          this.userInfo = JSON.parse(userData);
+          this.isLoggedIn = true;
+        } catch (error) {
+          console.error('Lỗi khi phân tích dữ liệu người dùng:', error);
+          this.logout();
+        }
+      }
+    },
+    
+    toggleDropdown(event) {
+      event.stopPropagation();
+      this.showUserMenu = !this.showUserMenu;
+    },
+    
+    closeDropdownOnClickOutside(event) {
+      const userProfileDropdown = this.$el.querySelector('.user-profile-dropdown');
+      if (userProfileDropdown && !userProfileDropdown.contains(event.target)) {
+        this.showUserMenu = false;
+      }
+    },
+    
+    logout() {
+      localStorage.removeItem('user');
+      this.isLoggedIn = false;
+      this.userInfo = {
+        ho_ten: '',
+        email: '',
+        picture: ''
+      };
+      this.showUserMenu = false;
+      
+      if (this.$route.path !== '/') {
+        this.$router.push('/');
+      }
+    }
+  }
+};
 </script>
 
 <style>
@@ -142,7 +234,111 @@ export default {};
   padding: 0;
   box-sizing: border-box;
 }
+.user-profile {
+  position: relative;
+}
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.user-info:hover {
+  background-color: rgba(0, 86, 179, 0.1);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0056b3;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #333;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 280px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.user-dropdown-header {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #f8f9fa;
+}
+
+.dropdown-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #0056b3;
+}
+
+.dropdown-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.dropdown-email {
+  font-size: 13px;
+  color: #666;
+  word-break: break-all;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 0;
+}
+
+.dropdown-menu-items {
+  list-style: none;
+  padding: 10px 0;
+}
+
+.dropdown-menu-items li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.dropdown-menu-items li a:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-menu-items li a i {
+  width: 20px;
+  color: #0056b3;
+}
 body {
   font-family: 'Roboto', sans-serif;
   line-height: 1.6;

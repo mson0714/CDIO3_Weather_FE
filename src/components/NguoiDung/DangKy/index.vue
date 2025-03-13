@@ -5,45 +5,49 @@
         <h2><i class="fas fa-user-plus"></i> Đăng Ký Tài Khoản</h2>
         <p>Đăng ký để nhận thông tin dự báo thời tiết hàng ngày</p>
       </div>
-      
-      <form class="register-form">
+
+      <form class="register-form " @submit.prevent="dangKy">
         <div class="form-group">
           <label for="fullname"><i class="fas fa-user"></i> Họ và tên</label>
-          <input 
-            type="text" 
-            id="fullname" 
+          <input
+            v-model="data_dang_ky.ho_ten"
+            type="text"
+            id="fullname"
             placeholder="Nhập họ và tên của bạn"
             required
           />
         </div>
-        
+
         <div class="form-group">
           <label for="email"><i class="fas fa-envelope"></i> Email</label>
-          <input 
-            type="email" 
-            id="email" 
+          <input
+            v-model="data_dang_ky.email"
+            type="email"
+            id="email"
             placeholder="Nhập địa chỉ email của bạn"
             required
           />
         </div>
-        
+
         <div class="form-group">
           <label for="phone"><i class="fas fa-phone"></i> Số điện thoại</label>
-          <input 
-            type="tel" 
-            id="phone" 
+          <input
+            v-model="data_dang_ky.so_dien_thoai"
+            type="tel"
+            id="phone"
             placeholder="Nhập số điện thoại của bạn"
             required
           />
         </div>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label for="password"><i class="fas fa-lock"></i> Mật khẩu</label>
             <div class="password-input">
-              <input 
-                type="password" 
-                id="password" 
+              <input
+                v-model="data_dang_ky.password"
+                type="password"
+                id="password"
                 placeholder="Nhập mật khẩu"
                 required
               />
@@ -52,13 +56,16 @@
               </button>
             </div>
           </div>
-          
+
           <div class="form-group">
-            <label for="confirm-password"><i class="fas fa-lock"></i> Xác nhận mật khẩu</label>
+            <label for="confirm-password"
+              ><i class="fas fa-lock"></i> Xác nhận mật khẩu</label
+            >
             <div class="password-input">
-              <input 
-                type="password" 
-                id="confirm-password" 
+              <input
+                v-model="data_dang_ky.re_password"
+                type="password"
+                id="confirm-password"
                 placeholder="Nhập lại mật khẩu"
                 required
               />
@@ -68,10 +75,12 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-group">
-          <label for="location"><i class="fas fa-map-marker-alt"></i> Địa điểm</label>
-          <select id="location" required>
+          <label for="location"
+            ><i class="fas fa-map-marker-alt"></i> Địa điểm</label
+          >
+          <select v-model="data_dang_ky.dia_diem" id="location" required>
             <option value="" disabled selected>Chọn thành phố của bạn</option>
             <option value="hanoi">Hà Nội</option>
             <option value="danang">Đà Nẵng</option>
@@ -81,32 +90,38 @@
             <option value="other">Khác</option>
           </select>
         </div>
-        
+
         <div class="form-group checkbox-group">
           <input type="checkbox" id="terms" required />
-          <label for="terms">Tôi đồng ý với <a href="#">Điều khoản sử dụng</a> và <a href="#">Chính sách bảo mật</a></label>
+          <label for="terms"
+            >Tôi đồng ý với <a href="#">Điều khoản sử dụng</a> và
+            <a href="#">Chính sách bảo mật</a></label
+          >
         </div>
-        
+
         <div class="form-group checkbox-group">
           <input type="checkbox" id="newsletter" />
-          <label for="newsletter">Tôi muốn nhận thông tin dự báo thời tiết qua email</label>
+          <label for="newsletter"
+            >Tôi muốn nhận thông tin dự báo thời tiết qua email</label
+          >
         </div>
-        
+
         <div class="form-actions">
           <button v-on:click="dangKy()" type="submit" class="btn-register">
             <i class="fas fa-user-plus"></i> Đăng Ký
           </button>
         </div>
       </form>
-      
+
       <div class="register-footer">
-        <p>Đã có tài khoản? <router-link to="/dang-nhap">Đăng nhập ngay</router-link></p>
+        <p>
+          Đã có tài khoản?
+          <router-link to="/dang-nhap">Đăng nhập ngay</router-link>
+        </p>
         <div class="social-login">
           <p>Hoặc đăng ký với</p>
           <div class="social-buttons">
-            <button class="btn-social btn-google">
-              <i class="fab fa-google"></i> Google
-            </button>
+            <GoogleLogin :callback="callback" />
             <button class="btn-social btn-facebook">
               <i class="fab fa-facebook-f"></i> Facebook
             </button>
@@ -114,7 +129,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="register-benefits">
       <div class="benefits-header">
         <h3>Lợi ích khi đăng ký tài khoản</h3>
@@ -124,7 +139,10 @@
           <i class="fas fa-bell"></i>
           <div>
             <h4>Thông báo thời tiết</h4>
-            <p>Nhận thông báo kịp thời về thay đổi thời tiết và cảnh báo nguy hiểm</p>
+            <p>
+              Nhận thông báo kịp thời về thay đổi thời tiết và cảnh báo nguy
+              hiểm
+            </p>
           </div>
         </li>
         <li>
@@ -154,14 +172,59 @@
 </template>
 
 <script>
+import axios from "axios";
+import { decodeCredential } from "vue3-google-login";
 export default {
-  name: 'DangKy',
+  data() {
+    return {
+      data_dang_ky: {},
+    };
+  },
   methods: {
+    callback(response) {
+      var thong_Tin = decodeCredential(response.credential);
+      var user = {
+        email: thong_Tin.email,
+        ho_ten: thong_Tin.name,
+        anhDaiDien: thong_Tin.picture, // Chú ý: thường là 'picture' thay vì 'imageUrl'
+      };
+      axios
+        .post("http://127.0.0.1:8000/api/nguoi-dung/dang-nhap-gg", user)
+        .then((response) => {
+          if (response.data.status == 1) {
+            // Lưu thông tin người dùng vào localStorage
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                email: user.email,
+                ho_ten: user.ho_ten,
+                anhDaiDien: user.anhDaiDien,
+                // Lưu thêm thông tin token nếu backend trả về
+                token: response.data.token || "",
+              })
+            );
+            this.$toast.success("Đăng ký thành công");
+            this.$router.push("/");
+          } else {
+            this.$toast.error("Đăng ký thất bại");
+          }
+        });
+    },
+
     dangKy() {
-      console.log('dang ky');
-    }
-  }
-}
+      axios
+        .post("http://127.0.0.1:8000/api/nguoi-dung/dang-ky",this.data_dang_ky)
+        .then((res) => {
+          if (res.data.status) {
+            this.$toast.success(res.data.message);
+            this.data_dang_ky = {};
+            this.$router.push("/dang-nhap");
+          } else {
+          }
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -434,7 +497,7 @@ select:focus {
   .register-container {
     flex-direction: column;
   }
-  
+
   .register-benefits {
     flex: 1;
     position: static;
@@ -446,12 +509,12 @@ select:focus {
     flex-direction: column;
     gap: 0;
   }
-  
+
   .social-buttons {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .btn-social {
     max-width: 200px;
     width: 100%;

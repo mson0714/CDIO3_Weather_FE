@@ -5,33 +5,24 @@
         <h2><i class="fas fa-sign-in-alt"></i> Đăng Nhập</h2>
         <p>Đăng nhập để truy cập thông tin dự báo thời tiết cá nhân hóa</p>
       </div>
-      
-      <form class="login-form">
+
+      <form class="login-form" @submit.prevent="dangNhap">
         <div class="form-group">
           <label for="email"><i class="fas fa-envelope"></i> Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            placeholder="Nhập địa chỉ email của bạn"
-            required
-          />
+          <input type="email" id="email" placeholder="Nhập địa chỉ email của bạn" required v-model="login.email" />
         </div>
-        
+
         <div class="form-group">
           <label for="password"><i class="fas fa-lock"></i> Mật khẩu</label>
           <div class="password-input">
-            <input 
-              type="password" 
-              id="password" 
-              placeholder="Nhập mật khẩu của bạn"
-              required
-            />
+            <input type="password" id="password" placeholder="Nhập mật khẩu của bạn" required
+              v-model="login.password" />
             <button type="button" class="toggle-password">
               <i class="fas fa-eye"></i>
             </button>
           </div>
         </div>
-        
+
         <div class="form-options">
           <div class="remember-me">
             <input type="checkbox" id="remember" />
@@ -39,31 +30,33 @@
           </div>
           <a href="#" class="forgot-password">Quên mật khẩu?</a>
         </div>
-        
+
         <div class="form-actions">
-          <button type="submit" class="btn-login">
+          <button v-on:click="dangNhap()" class="btn-login">
             <i class="fas fa-sign-in-alt"></i> Đăng Nhập
           </button>
         </div>
       </form>
-      
+
       <div class="login-divider">
         <span>Hoặc đăng nhập với</span>
       </div>
-      
+
       <div class="social-login">
-        
-          <GoogleLogin :callback="callback"/>
+        <GoogleLogin :callback="callback" />
         <button class="btn-social btn-facebook">
           <i class="fab fa-facebook-f"></i> Facebook
         </button>
       </div>
-      
+
       <div class="login-footer">
-        <p>Chưa có tài khoản? <router-link to="/dang-ky">Đăng ký ngay</router-link></p>
+        <p>
+          Chưa có tài khoản?
+          <router-link to="/dang-ky">Đăng ký ngay</router-link>
+        </p>
       </div>
     </div>
-    
+
     <div class="login-features">
       <div class="weather-preview">
         <h3><i class="fas fa-cloud-sun"></i> Dự báo thời tiết hôm nay</h3>
@@ -81,44 +74,74 @@
             </div>
           </div>
         </div>
-        <p class="preview-message">Đăng nhập để xem dự báo chi tiết và cá nhân hóa</p>
+        <p class="preview-message">
+          Đăng nhập để xem dự báo chi tiết và cá nhân hóa
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import { decodeCredential } from 'vue3-google-login'
+import axios from "axios";
+import { decodeCredential } from "vue3-google-login";
 export default {
-  name: 'DangNhap',
   data() {
     return {
-      
-    }
+      login: {},
+    };
   },
 
   methods: {
     callback(response) {
-      var thong_Tin = decodeCredential(response.credential)
+      var thong_Tin = decodeCredential(response.credential);
       var user = {
-        'email': thong_Tin.email,
-        'ho_ten': thong_Tin.name,
-        'anhDaiDien': thong_Tin.imageUrl
-      }
+        email: thong_Tin.email,
+        ho_ten: thong_Tin.name,
+        anhDaiDien: thong_Tin.picture,
+      };
       axios
-      .post('http://127.0.0.1:8000/api/nguoi-dung/dang-nhap-gg', user)
-      .then(response => {
-        if(response.data.status == 1){
-          this.$toast.success('Đăng nhập thành công')
-          this.$router.push('/')
-        }else{
-          this.$toast.error('Đăng nhập thất bại')
-        }
-      })
-    }
-  }
-}
+        .post("http://127.0.0.1:8000/api/nguoi-dung/dang-nhap-gg", user)
+        .then((response) => {
+          if (response.data.status == 1) {
+            // Lưu thông tin người dùng vào localStorage
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                email: user.email,
+                ho_ten: user.ho_ten,
+                anhDaiDien: user.anhDaiDien,
+                // Lưu thêm thông tin token nếu backend trả về
+                token: response.data.token || "",
+              })
+            );
+            this.$toast.success("Đăng nhập thành công");
+            this.$router.push("/");
+          } else {
+            this.$toast.error("Đăng nhập thất bại");
+          }
+        });
+    },
+
+    dangNhap() {
+      axios
+
+        .post("http://127.0.0.1:8000/api/nguoi-dung/dang-nhap", this.login)
+        .then((res) => {
+          if (res.data.status) {
+            this.$toast.success(res.data.message);
+            localStorage.setItem("token_khach_hang", res.data.token);
+            this.$router.push("/");
+          } else {
+            this.$toast.error(res.data.message);
+          }
+        }) 
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -268,7 +291,7 @@ export default {
 }
 
 .login-divider::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 0;
@@ -370,7 +393,7 @@ export default {
 
 .weather-icon {
   font-size: 3rem;
-  color: #FFD700;
+  color: #ffd700;
 }
 
 .weather-info {
@@ -420,7 +443,7 @@ export default {
   .login-container {
     flex-direction: column;
   }
-  
+
   .login-features {
     flex: 1;
   }
@@ -432,7 +455,7 @@ export default {
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .social-login {
     flex-direction: column;
   }
